@@ -1,0 +1,5 @@
+{
+  "name": "php-app",
+  "version": "1.0.0",
+  "description": "PHP application running on Node.js environment"
+}
