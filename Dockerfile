@@ -1,16 +1,19 @@
-FROM php:8.2-apache
+FROM nginx:alpine
 
-# 1. Cài đặt unzip (rất quan trọng!)
-RUN apt-get update && apt-get install -y unzip
-
-# 2. Copy file html.zip từ Git vào container
+RUN apk add --no-cache unzip
 COPY html.zip /tmp/
 
-# 3. Giải nén vào thư mục web của Apache
-RUN unzip -o /tmp/html.zip -d /var/www/html/ \
-    && rm /tmp/html.zip
-
-# 4. Set quyền (nếu cần)
-RUN chown -R www-data:www-data /var/www/html
+# GIẢI NÉN và DEBUG
+RUN echo "=== DEBUG START ===" && \
+    pwd && \
+    ls -la /tmp/ && \
+    echo "=== Unzipping ===" && \
+    unzip -o /tmp/html.zip -d /usr/share/nginx/html/ && \
+    echo "=== After unzip ===" && \
+    ls -la /usr/share/nginx/html/ && \
+    echo "=== File list ===" && \
+    find /usr/share/nginx/html/ -type f | head -20 && \
+    rm /tmp/html.zip && \
+    echo "=== DEBUG END ==="
 
 EXPOSE 80
