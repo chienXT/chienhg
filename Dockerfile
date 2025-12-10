@@ -1,22 +1,12 @@
-FROM nginx:alpine
+FROM php:8.2-apache
 
-RUN apk add --no-cache unzip
+RUN apt-get update && apt-get install -y unzip
 COPY html.zip /tmp/
 
-# CÁCH 1: Giải nén tất cả vào thư mục gốc
-RUN unzip -o /tmp/html.zip && \
-    mv * /usr/share/nginx/html/ 2>/dev/null || true
-
-# CÁCH 2: Hoặc thử
-RUN cd /tmp && \
-    unzip -o html.zip && \
-    cp -r * /usr/share/nginx/html/ 2>/dev/null || true
-
-# CÁCH 3: Hoặc tìm file index.*
-RUN cd /tmp && \
-    unzip -o html.zip && \
-    find . -name "index.*" -exec cp --parents {} /usr/share/nginx/html/ \;
-
-RUN rm -f /tmp/html.zip
+# Giải nén và di chuyển file
+RUN unzip /tmp/html.zip -d /tmp/extracted/ \
+    && mv /tmp/extracted/* /var/www/html/ \
+    && rm -rf /tmp/extracted /tmp/html.zip \
+    && chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
