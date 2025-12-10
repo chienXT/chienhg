@@ -1,12 +1,11 @@
-FROM php:8.2-cli
+FROM nginx:alpine
 
-WORKDIR /app
+# Cài unzip trước
+RUN apk add --no-cache unzip
 
-COPY . .
+# Copy file zip từ context build (từ máy bạn)
+COPY html.zip /tmp/
 
-# Giải nén file ZIP
-RUN unzip -o html.zip && rm html.zip
-
-EXPOSE 8080
-
-CMD ["php", "-S", "0.0.0.0:8080", "-t", "/app"]
+# Giải nén vào đúng thư mục
+RUN unzip -o /tmp/html.zip -d /usr/share/nginx/html/ \
+    && rm /tmp/html.zip
