@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . .
 
 # Giải nén file ZIP
-RUN unzip -o public3.zip && rm public3.zip
+RUN unzip -o html.zip && rm html.zip
 
 EXPOSE 8080
 
